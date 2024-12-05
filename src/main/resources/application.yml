@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: ${APP_NAME:BloodPressureTracker}
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${APP_DATASOURCE_USERNAME}
+    password: ${APP_DATASOURCE_PASSWORD}
+    url: ${APP_DATASOURCE_URL}
+    hikari:
+      schema: ${APP_DATASOURCE_SCHEMA}
+    flyway:
+      enabled: true
+      validate-on-migrate: true
+  jpa:
+    show-sql: true
