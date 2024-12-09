@@ -6,6 +6,5 @@ import java.time.LocalDate
 
 interface UserDailyBPStatisticsService {
     fun addNewBPStatistic(bpStatistics: BPStatisticsCreateUpdateDto)
-    fun updateBPStatistic(bpStatistics: BPStatisticsCreateUpdateDto)
     fun getBPStatistics(userId: Long, from: LocalDate, to: LocalDate): List<UserDailyBPStatistics>
 }

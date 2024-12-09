@@ -18,20 +18,10 @@ class UserDailyBPStatisticsImpl(
         val userDailyBpStatisticsId = UserDailyBpStatisticsId(
             bpStatistics.userId, bpStatistics.date
         )
-        val userDailyBPStatistics = UserDailyBPStatistics(userDailyBpStatisticsId)
+        val userDailyBPStatistics = userDailyBpStatisticsRepository.findById(userDailyBpStatisticsId)
+            .orElse(UserDailyBPStatistics(userDailyBpStatisticsId))
         setBpValue(userDailyBPStatistics, bpStatistics)
         userDailyBpStatisticsRepository.save(userDailyBPStatistics)
-    }
-
-    override fun updateBPStatistic(bpStatistics: BPStatisticsCreateUpdateDto) {
-        val userDailyBpStatisticsId = UserDailyBpStatisticsId(
-            bpStatistics.userId, bpStatistics.date
-        )
-        userDailyBpStatisticsRepository.findById(userDailyBpStatisticsId)
-            .ifPresent {
-                setBpValue(it, bpStatistics)
-                userDailyBpStatisticsRepository.save(it)
-            }
     }
 
     override fun getBPStatistics(userId: Long, from: LocalDate, to: LocalDate): List<UserDailyBPStatistics> {
