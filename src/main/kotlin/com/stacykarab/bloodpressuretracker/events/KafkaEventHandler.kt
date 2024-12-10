@@ -1,6 +1,8 @@
 package com.stacykarab.bloodpressuretracker.events
 
-import com.stacykarab.bloodpressuretracker.service.CalculationService
+import com.stacykarab.bloodpressuretracker.service.CalculationServiceImpl
+import com.stacykarab.bloodpressuretracker.service.NotificationService
+import com.stacykarab.bloodpressuretracker.utils.StatisticsConsts
 import mu.KotlinLogging
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.messaging.handler.annotation.Payload
@@ -10,17 +12,18 @@ private val logger = KotlinLogging.logger {}
 
 @Component
 class KafkaEventHandler(
-    private val calculationService: CalculationService,
+    private val calculationService: CalculationServiceImpl,
+    private val notificationService: NotificationService,
 ) {
 
     @KafkaListener(
-        topics = ["bp-statistics"],
-        groupId = "bp-statistics-consumers",
-        properties = ["spring.json.value.default.type=com.stacykarab.bloodpressuretracker.events.KafkaBpStatistics"]
+        topics = [StatisticsConsts.KAFKA_CONSUMER_BP_STATISTICS_TOPIC],
+        groupId = StatisticsConsts.KAFKA_CONSUMER_BP_STATISTICS_GROUP_ID,
     )
     fun getBpStatistics(@Payload kafkaBpStatistics: KafkaBpStatistics) {
         logger.info { "Received new BP for user ${kafkaBpStatistics.userId}" }
         calculationService.addBpToCalculateAverage(kafkaBpStatistics)
+        notificationService.notify(kafkaBpStatistics)
     }
 
 }

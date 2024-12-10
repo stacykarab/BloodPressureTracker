@@ -17,9 +17,5 @@ enum class PartOfDay(
     MORNING(AVG_SYSTOLIC_MORNING, AVG_DIASTOLIC_MORNING),
     AFTERNOON(AVG_SYSTOLIC_AFTERNOON, AVG_DIASTOLIC_AFTERNOON),
     EVENING(AVG_SYSTOLIC_EVENING, AVG_DIASTOLIC_EVENING);
-
-    companion object {
-        val partOfDayEntries: Map<String, PartOfDay> = PartOfDay.entries.associateBy{ it.name }
-    }
 }
 

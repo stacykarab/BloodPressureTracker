@@ -22,6 +22,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: com.stacykarab.bloodpressuretracker
+        spring.json.value.default.type: com.stacykarab.bloodpressuretracker.events.KafkaBpStatistics
     producer:
       acks: -1
       bootstrap-servers: ${APP_KAFKA_PRODUCER_BOOTSTRAP_SERVERS:localhost:29092}
