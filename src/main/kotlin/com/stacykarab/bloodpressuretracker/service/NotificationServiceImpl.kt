@@ -25,8 +25,8 @@ class NotificationServiceImpl(
             kafkaTemplate.send(
                 StatisticsConsts.KAFKA_PRODUCER_NOTIFICATIONS_TOPIC,
                 BPNotificationDto(
-                    systolic = kafkaBpStatistics.systolicPressure,
-                    diastolic = kafkaBpStatistics.diastolicPressure,
+                    systolic = systolicPressure,
+                    diastolic = diastolicPressure,
                     message = it
                 )
             )
