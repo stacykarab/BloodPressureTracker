@@ -1,0 +1,220 @@
+openapi: 3.0.1
+info:
+  title: User API
+  description: API for managing users
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+paths:
+  /users:
+    get:
+      summary: Get all users
+      operationId: findAll
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDto'
+    post:
+      summary: Create a new user
+      operationId: create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateUpdateDto'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+
+  /users/{id}:
+    get:
+      summary: Get user by ID
+      operationId: findById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to retrieve
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        '404':
+          description: User not found
+
+  /users/bp/{id}:
+    get:
+      summary: Get user blood pressure statistics per specific period
+      operationId: findBpStatistics
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to update
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: from
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: to
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: User blood pressure statistics per specific period
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBpStatisticsDto'
+
+components:
+  schemas:
+    ChronicIllnessDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: 'Diabetes'
+        bpRelated:
+          type: string
+          enum:
+            - 'HYPERTENSION'
+            - 'HYPOTENSION'
+            - 'NONE'
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: 'Amelie Griffith'
+        gender:
+          type: string
+          enum:
+            - 'M'
+            - 'F'
+        birthDate:
+          type: string
+          format: date
+          example: '1995-02-18'
+        height:
+          type: integer
+          example: 175
+        weight:
+          type: integer
+          example: 70
+        smoking:
+          type: boolean
+        avgSystolic:
+          type: integer
+          example: 100
+        avgDiastolic:
+          type: integer
+          example: 70
+        chronicIllnesses:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChronicIllnessDto'
+    UserCreateUpdateDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: 'Amelie Griffith'
+        gender:
+          type: string
+          enum:
+            - 'M'
+            - 'F'
+        birthDate:
+          type: string
+          format: date
+          example: '1995-02-18'
+        height:
+          type: integer
+          example: 175
+        weight:
+          type: integer
+          example: 70
+        smoking:
+          type: boolean
+        avgSystolic:
+          type: integer
+          example: 100
+        avgDiastolic:
+          type: integer
+          example: 70
+        chronicIllnessIds:
+          type: array
+          items:
+            type: integer
+      required:
+        - name
+        - gender
+    UserDailyBPStatisticsDto:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: '2024-10-15'
+        avgSystolicNight:
+          type: integer
+        avgDiastolicNight:
+          type: integer
+        avgSystolicMorning:
+          type: integer
+        avgDiastolicMorning:
+          type: integer
+        avgSystolicAfternoon:
+          type: integer
+        avgDiastolicAfternoon:
+          type: integer
+        avgSystolicEvening:
+          type: integer
+        avgDiastolicEvening:
+          type: integer
+    UserBpStatisticsDto:
+      type: object
+      properties:
+        userDto:
+          $ref: '#/components/schemas/UserDto'
+        bpStatistics:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserDailyBPStatisticsDto'
+

@@ -3,7 +3,7 @@ package com.stacykarab.bloodpressuretracker.service
 import com.stacykarab.bloodpressuretracker.dto.UserBpStatisticsDto
 import com.stacykarab.bloodpressuretracker.dto.UserCreateUpdateDto
 import com.stacykarab.bloodpressuretracker.dto.UserDto
-import com.stacykarab.bloodpressuretracker.dto.UserRequestFilter
+import com.stacykarab.bloodpressuretracker.dto.UserRequestFilterDto
 import com.stacykarab.bloodpressuretracker.mapper.UserBpStatisticsMapper
 import com.stacykarab.bloodpressuretracker.mapper.UserMapper
 import com.stacykarab.bloodpressuretracker.repository.UserRepository
@@ -27,12 +27,8 @@ class UserServiceImpl(
         return userRepository.findByIdOrNull(id)?.let { userMapper.toUserDto(it) }
     }
 
-    override fun getAllByFilter(filter: UserRequestFilter): List<UserDto> {
+    override fun getAllByFilter(filter: UserRequestFilterDto?): List<UserDto> {
         return userRepository.findAll().map { userMapper.toUserDto(it) }
-    }
-
-    override fun update(user: UserCreateUpdateDto): UserDto {
-        return userMapper.toUserDto(userRepository.save(userMapper.toUserEntity(user)))
     }
 
     override fun getBpStatistics(id: Long, from: LocalDate, to: LocalDate): UserBpStatisticsDto? {
