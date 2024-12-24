@@ -7,13 +7,15 @@ import com.stacykarab.bloodpressuretracker.dto.UserRequestFilterDto
 import com.stacykarab.bloodpressuretracker.mapper.UserBpStatisticsMapper
 import com.stacykarab.bloodpressuretracker.mapper.UserMapper
 import com.stacykarab.bloodpressuretracker.repository.UserRepository
+import com.stacykarab.bloodpressuretracker.repository.UserSpecifications
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
+
 @Service
 class UserServiceImpl(
-    private val userRepository : UserRepository,
+    private val userRepository: UserRepository,
     private val userMapper: UserMapper,
     private val bpStatisticsService: UserDailyBPStatisticsService,
     private val bpStatisticsMapper: UserBpStatisticsMapper,
@@ -23,12 +25,15 @@ class UserServiceImpl(
         return userMapper.toUserDto(userRepository.save(userMapper.toUserEntity(user)))
     }
 
-    override fun getById(id : Long): UserDto? {
+    override fun getById(id: Long): UserDto? {
         return userRepository.findByIdOrNull(id)?.let { userMapper.toUserDto(it) }
     }
 
     override fun getAllByFilter(filter: UserRequestFilterDto?): List<UserDto> {
-        return userRepository.findAll().map { userMapper.toUserDto(it) }
+        println(filter)
+        return userRepository
+            .findAll(UserSpecifications.getUserSpecification(filter))
+            .map { userMapper.toUserDto(it) }
     }
 
     override fun getBpStatistics(id: Long, from: LocalDate, to: LocalDate): UserBpStatisticsDto? {

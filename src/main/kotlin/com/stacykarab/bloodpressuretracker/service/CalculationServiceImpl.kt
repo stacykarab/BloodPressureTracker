@@ -82,7 +82,7 @@ class CalculationServiceImpl(
     private fun getCurrentPartOfDay(timestamp: LocalDateTime?): PartOfDay {
         return when (timestamp?.hour) {
             in 6..11 -> PartOfDay.MORNING
-            in 12..15 -> PartOfDay.AFTERNOON
+            in 12..17 -> PartOfDay.AFTERNOON
             in 18..23 -> PartOfDay.EVENING
             else -> PartOfDay.NIGHT
         }

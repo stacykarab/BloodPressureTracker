@@ -4,6 +4,8 @@ import com.stacykarab.bloodpressuretracker.api.UsersApiDelegate
 import com.stacykarab.bloodpressuretracker.dto.UserBpStatisticsDto
 import com.stacykarab.bloodpressuretracker.dto.UserCreateUpdateDto
 import com.stacykarab.bloodpressuretracker.dto.UserDto
+import com.stacykarab.bloodpressuretracker.dto.UserRequestFilterDto
+import com.stacykarab.bloodpressuretracker.entity.Gender
 import com.stacykarab.bloodpressuretracker.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,9 +24,31 @@ class UserController(
         )
     }
 
-    override fun findAll(): ResponseEntity<List<UserDto>> {
+    override fun findAll(
+        userIds: List<Long>?,
+        name: String?,
+        gender: String?,
+        birthDateFrom: LocalDate?,
+        birthDateTo: LocalDate?,
+        smoking: Boolean?,
+        height: List<Int>?,
+        weight: List<Int>?,
+        chronicIllnessIds: List<Long>?
+    ): ResponseEntity<List<UserDto>> {
         return ResponseEntity.ok(
-            userService.getAllByFilter(null)
+            userService.getAllByFilter(
+                UserRequestFilterDto(
+                    userIds = userIds,
+                    name = name,
+                    gender = gender?.let { listOf(Gender.valueOf(it)) },
+                    birthDateFrom = birthDateFrom,
+                    birthDateTo = birthDateTo,
+                    smoking = smoking,
+                    height = height?.let { IntRange(it.first(), height.last()) },
+                    weight = weight?.let { IntRange(it.first(), weight.last()) },
+                    chronicIllnessIds = chronicIllnessIds
+                )
+            )
         )
     }
 
